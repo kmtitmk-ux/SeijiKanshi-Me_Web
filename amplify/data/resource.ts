@@ -8,11 +8,16 @@ and "delete" any "Todo" records.
 =========================================================================*/
 const schema = a.schema({
   SKM01: a
-    .model({
-      content: a.string(),
-      isDone: a.boolean()
-    })
-    .authorization((allow) => [allow.guest()]),
+      .model({
+          content: a.string(),
+          sex: a.string(),
+          age: a.string(),
+          city: a.string(),
+          point: a.string(),
+          population: a.integer(),
+          prefecture: a.string()
+      })
+      .authorization((allow) => [allow.guest()]),
 });
 
 export type Schema = ClientSchema<typeof schema>;
