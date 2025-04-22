@@ -13,10 +13,10 @@ export function Test(): React.JSX.Element {
         console.log(SKM01);
     };
     const createSKM01 = async (): Promise<void> => {
-        await client.models.SKM01.create({
-            content: 'BBB', // window.prompt('Todo content?'),
-            isDone: false,
-        });
+        // await client.models.SKM01.sKM01sByPrefectureAndCity({
+        //     content: 'BBB', // window.prompt('Todo content?'),
+        //     isDone: false,
+        // });
     };
     return (
         <>

@@ -4,6 +4,8 @@ import Grid from '@mui/material/Unstable_Grid2';
 // import dayjs from 'dayjs';
 // import { config } from '@/config';
 // import { Test } from '@/components/dashboard/layout/test';
+// import type { Schema } from '@/../amplify/data/resource';
+// import { generateClient } from 'aws-amplify/data';
 // import { Budget } from '@/components/dashboard/overview/budget';
 // import { LatestOrders } from '@/components/dashboard/overview/latest-orders';
 // import { LatestProducts } from '@/components/dashboard/overview/latest-products';
@@ -25,6 +27,7 @@ import { ArrowRight as ArrowRightIcon } from '@phosphor-icons/react/dist/ssr/Arr
 import { LineChart } from '@mui/x-charts/LineChart';
 import { PieChart } from '@mui/x-charts/PieChart';
 
+// const client = generateClient<Schema>();
 // export const metadata = { title: `Overview | Dashboard | ${config.site.name}` } satisfies Metadata;
 interface PopulationPageProps {
     params: {
@@ -32,11 +35,16 @@ interface PopulationPageProps {
     };
 }
 
-export default function Page({ params }: PopulationPageProps): React.JSX.Element {
+export default async function Page({ params }: PopulationPageProps): Promise<React.JSX.Element> {
     const { id } = params;
     const checkId = decodeURIComponent(id).split("+");
     const prefecture = checkId[0];
     const city = checkId.length === 1 ? "" : checkId[1];
+
+    // const res = await client.models.SKM01.sKM01sByPrefectureAndCity({
+    //     prefecture,
+    //     city,
+    // });
     return (
         <Grid container spacing={3}>
             {/* <Test /> */}
@@ -159,12 +167,13 @@ export default function Page({ params }: PopulationPageProps): React.JSX.Element
     );
 }
 
-export interface TimeSeriesProps {
+
+interface TimeSeriesProps {
     sx?: SxProps;
     prefecture: string;
     city: string;
 }
-export function TimeSeries({ sx, prefecture, city }: TimeSeriesProps): React.JSX.Element {
+function TimeSeries({ sx, prefecture, city }: TimeSeriesProps): React.JSX.Element {
     const uData = [4000, 3000, 2000, 2780, 1890, 2390];
     const pData = [2400, 1398, 9800, 3908, 4800, 3800];
     const xLabels = [
@@ -206,12 +215,13 @@ export function TimeSeries({ sx, prefecture, city }: TimeSeriesProps): React.JSX
     );
 }
 
-export interface ByAgeProps {
+
+interface ByAgeProps {
     sx?: SxProps;
     prefecture: string;
     city: string;
 }
-export function ByAge({ sx, prefecture, city }: ByAgeProps): React.JSX.Element {
+function ByAge({ sx, prefecture, city }: ByAgeProps): React.JSX.Element {
     return (
         <Card sx={sx}>
             <CardHeader
