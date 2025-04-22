@@ -20,8 +20,10 @@ const schema = a.schema({
         .authorization((allow) => [allow.guest()])
         .secondaryIndexes((index) => [
             index("prefecture")
-              .sortKeys(["city"]),
-          ])
+                .sortKeys(["city"])
+                .queryField('sKM01sByPrefectureAndCity')
+
+        ])
 });
 
 export type Schema = ClientSchema<typeof schema>;
