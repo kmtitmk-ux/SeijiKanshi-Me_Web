@@ -1,137 +1,157 @@
 import * as React from 'react';
 import type { Metadata } from 'next';
-import outputs from '@/../amplify_outputs.json';
-import Grid from '@mui/material/Unstable_Grid2';
-import { Amplify } from 'aws-amplify';
+// import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+// import { Download as DownloadIcon } from '@phosphor-icons/react/dist/ssr/Download';
+// import { Plus as PlusIcon } from '@phosphor-icons/react/dist/ssr/Plus';
+// import { Upload as UploadIcon } from '@phosphor-icons/react/dist/ssr/Upload';
 import dayjs from 'dayjs';
 
 import { config } from '@/config';
-import { Budget } from '@/components/dashboard/overview/budget';
-import { LatestOrders } from '@/components/dashboard/overview/latest-orders';
-import { LatestProducts } from '@/components/dashboard/overview/latest-products';
-import { Sales } from '@/components/dashboard/overview/sales';
-import { TasksProgress } from '@/components/dashboard/overview/tasks-progress';
-import { TotalCustomers } from '@/components/dashboard/overview/total-customers';
-import { TotalProfit } from '@/components/dashboard/overview/total-profit';
-import { Traffic } from '@/components/dashboard/overview/traffic';
+import { CustomersFilters } from '@/components/dashboard/customer/customers-filters';
+import { CustomersTable } from '@/components/dashboard/customer/customers-table';
+import type { Customer } from '@/components/dashboard/customer/customers-table';
 
-Amplify.configure(outputs);
+export const metadata = { title: `Customers | Dashboard | ${config.site.name}` } satisfies Metadata;
+const customers = [
+    {
+        id: '1',
+        prefecture: '東京都',
+        avatar: '/assets/avatar-10.png',
+        city: '港区',
+        phone: '908-691-3242',
+        address: { city: 'Madrid', country: 'Spain', state: 'Comunidad de Madrid', street: '4158 Hedge Street' },
+        updatedAt: dayjs().subtract(2, 'hours').toDate(),
+    },
+    {
+        id: '2',
+        prefecture: '東京都',
+        avatar: '/assets/avatar-10.png',
+        city: '千代田区',
+        phone: '908-691-3242',
+        address: { city: 'Madrid', country: 'Spain', state: 'Comunidad de Madrid', street: '4158 Hedge Street' },
+        updatedAt: dayjs().subtract(2, 'hours').toDate(),
+    },
+    // {
+    //     id: 'USR-009',
+    //     prefecture: 'Marcus Finn',
+    //     avatar: '/assets/avatar-9.png',
+    //     city: 'marcus.finn@devias.io',
+    //     phone: '415-907-2647',
+    //     address: { city: 'Carson City', country: 'USA', state: 'Nevada', street: '2188 Armbrester Drive' },
+    //     updatedAt: dayjs().subtract(2, 'hours').toDate(),
+    // },
+    // {
+    //     id: 'USR-008',
+    //     prefecture: 'Jie Yan',
+    //     avatar: '/assets/avatar-8.png',
+    //     city: 'jie.yan.song@devias.io',
+    //     phone: '770-635-2682',
+    //     address: { city: 'North Canton', country: 'USA', state: 'Ohio', street: '4894 Lakeland Park Drive' },
+    //     updatedAt: dayjs().subtract(2, 'hours').toDate(),
+    // },
+    // {
+    //     id: 'USR-007',
+    //     prefecture: 'Nasimiyu Danai',
+    //     avatar: '/assets/avatar-7.png',
+    //     city: 'nasimiyu.danai@devias.io',
+    //     phone: '801-301-7894',
+    //     address: { city: 'Salt Lake City', country: 'USA', state: 'Utah', street: '368 Lamberts Branch Road' },
+    //     updatedAt: dayjs().subtract(2, 'hours').toDate(),
+    // },
+    // {
+    //     id: 'USR-006',
+    //     prefecture: 'Iulia Albu',
+    //     avatar: '/assets/avatar-6.png',
+    //     city: 'iulia.albu@devias.io',
+    //     phone: '313-812-8947',
+    //     address: { city: 'Murray', country: 'USA', state: 'Utah', street: '3934 Wildrose Lane' },
+    //     updatedAt: dayjs().subtract(2, 'hours').toDate(),
+    // },
+    // {
+    //     id: 'USR-005',
+    //     prefecture: 'Fran Perez',
+    //     avatar: '/assets/avatar-5.png',
+    //     city: 'fran.perez@devias.io',
+    //     phone: '712-351-5711',
+    //     address: { city: 'Atlanta', country: 'USA', state: 'Georgia', street: '1865 Pleasant Hill Road' },
+    //     updatedAt: dayjs().subtract(2, 'hours').toDate(),
+    // },
 
-export const metadata = { title: `Overview | Dashboard | ${config.site.name}` } satisfies Metadata;
+    // {
+    //     id: 'USR-004',
+    //     prefecture: 'Penjani Inyene',
+    //     avatar: '/assets/avatar-4.png',
+    //     city: 'penjani.inyene@devias.io',
+    //     phone: '858-602-3409',
+    //     address: { city: 'Berkeley', country: 'USA', state: 'California', street: '317 Angus Road' },
+    //     updatedAt: dayjs().subtract(2, 'hours').toDate(),
+    // },
+    // {
+    //     id: 'USR-003',
+    //     prefecture: 'Carson Darrin',
+    //     avatar: '/assets/avatar-3.png',
+    //     city: 'carson.darrin@devias.io',
+    //     phone: '304-428-3097',
+    //     address: { city: 'Cleveland', country: 'USA', state: 'Ohio', street: '2849 Fulton Street' },
+    //     updatedAt: dayjs().subtract(2, 'hours').toDate(),
+    // },
+    // {
+    //     id: 'USR-002',
+    //     prefecture: 'Siegbert Gottfried',
+    //     avatar: '/assets/avatar-2.png',
+    //     city: 'siegbert.gottfried@devias.io',
+    //     phone: '702-661-1654',
+    //     address: { city: 'Los Angeles', country: 'USA', state: 'California', street: '1798 Hickory Ridge Drive' },
+    //     updatedAt: dayjs().subtract(2, 'hours').toDate(),
+    // },
+    // {
+    //     id: 'USR-001',
+    //     prefecture: 'Miron Vitold',
+    //     avatar: '/assets/avatar-1.png',
+    //     city: 'miron.vitold@devias.io',
+    //     phone: '972-333-4106',
+    //     address: { city: 'San Diego', country: 'USA', state: 'California', street: '75247' },
+    //     updatedAt: dayjs().subtract(2, 'hours').toDate(),
+    // },
+] satisfies Customer[];
 
 export default function Page(): React.JSX.Element {
-  return (
-    <Grid container spacing={3}>
-      <Grid lg={3} sm={6} xs={12}>
-        <Budget diff={12} trend="up" sx={{ height: '100%' }} value="$24k" />
-      </Grid>
-      <Grid lg={3} sm={6} xs={12}>
-        <TotalCustomers diff={16} trend="down" sx={{ height: '100%' }} value="1.6k" />
-      </Grid>
-      <Grid lg={3} sm={6} xs={12}>
-        <TasksProgress sx={{ height: '100%' }} value={75.5} />
-      </Grid>
-      <Grid lg={3} sm={6} xs={12}>
-        <TotalProfit sx={{ height: '100%' }} value="$15k" />
-      </Grid>
-      <Grid lg={8} xs={12}>
-        <Sales
-          chartSeries={[
-            { name: 'This year', data: [18, 16, 5, 8, 3, 14, 14, 16, 17, 19, 18, 20] },
-            { name: 'Last year', data: [12, 11, 4, 6, 2, 9, 9, 10, 11, 12, 13, 13] },
-          ]}
-          sx={{ height: '100%' }}
-        />
-      </Grid>
-      <Grid lg={4} md={6} xs={12}>
-        <Traffic chartSeries={[63, 15, 22]} labels={['Desktop', 'Tablet', 'Phone']} sx={{ height: '100%' }} />
-      </Grid>
-      <Grid lg={4} md={6} xs={12}>
-        <LatestProducts
-          products={[
-            {
-              id: 'PRD-005',
-              name: 'Soja & Co. Eucalyptus',
-              image: '/assets/product-5.png',
-              updatedAt: dayjs().subtract(18, 'minutes').subtract(5, 'hour').toDate(),
-            },
-            {
-              id: 'PRD-004',
-              name: 'Necessaire Body Lotion',
-              image: '/assets/product-4.png',
-              updatedAt: dayjs().subtract(41, 'minutes').subtract(3, 'hour').toDate(),
-            },
-            {
-              id: 'PRD-003',
-              name: 'Ritual of Sakura',
-              image: '/assets/product-3.png',
-              updatedAt: dayjs().subtract(5, 'minutes').subtract(3, 'hour').toDate(),
-            },
-            {
-              id: 'PRD-002',
-              name: 'Lancome Rouge',
-              image: '/assets/product-2.png',
-              updatedAt: dayjs().subtract(23, 'minutes').subtract(2, 'hour').toDate(),
-            },
-            {
-              id: 'PRD-001',
-              name: 'Erbology Aloe Vera',
-              image: '/assets/product-1.png',
-              updatedAt: dayjs().subtract(10, 'minutes').toDate(),
-            },
-          ]}
-          sx={{ height: '100%' }}
-        />
-      </Grid>
-      <Grid lg={8} md={12} xs={12}>
-        <LatestOrders
-          orders={[
-            {
-              id: 'ORD-007',
-              customer: { name: 'Ekaterina Tankova' },
-              amount: 30.5,
-              status: 'pending',
-              createdAt: dayjs().subtract(10, 'minutes').toDate(),
-            },
-            {
-              id: 'ORD-006',
-              customer: { name: 'Cao Yu' },
-              amount: 25.1,
-              status: 'delivered',
-              createdAt: dayjs().subtract(10, 'minutes').toDate(),
-            },
-            {
-              id: 'ORD-004',
-              customer: { name: 'Alexa Richardson' },
-              amount: 10.99,
-              status: 'refunded',
-              createdAt: dayjs().subtract(10, 'minutes').toDate(),
-            },
-            {
-              id: 'ORD-003',
-              customer: { name: 'Anje Keizer' },
-              amount: 96.43,
-              status: 'pending',
-              createdAt: dayjs().subtract(10, 'minutes').toDate(),
-            },
-            {
-              id: 'ORD-002',
-              customer: { name: 'Clarke Gillebert' },
-              amount: 32.54,
-              status: 'delivered',
-              createdAt: dayjs().subtract(10, 'minutes').toDate(),
-            },
-            {
-              id: 'ORD-001',
-              customer: { name: 'Adam Denisov' },
-              amount: 16.76,
-              status: 'delivered',
-              createdAt: dayjs().subtract(10, 'minutes').toDate(),
-            },
-          ]}
-          sx={{ height: '100%' }}
-        />
-      </Grid>
-    </Grid>
-  );
+    const page = 0;
+    const rowsPerPage = 5;
+    const paginatedCustomers = applyPagination(customers, page, rowsPerPage);
+    return (
+        <Stack spacing={3}>
+            <Stack direction="row" spacing={3}>
+                <Stack spacing={1} sx={{ flex: '1 1 auto' }}>
+                    <Typography variant="h4">Customers</Typography>
+                    {/* <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                        <Button color="inherit" startIcon={<UploadIcon fontSize="var(--icon-fontSize-md)" />}>
+                            Import
+                        </Button>
+                        <Button color="inherit" startIcon={<DownloadIcon fontSize="var(--icon-fontSize-md)" />}>
+                            Export
+                        </Button>
+                    </Stack> */}
+                </Stack>
+                {/* <div>
+                    <Button startIcon={<PlusIcon fontSize="var(--icon-fontSize-md)" />} variant="contained">
+                        Add
+                    </Button>
+                </div> */}
+            </Stack>
+            <CustomersFilters />
+            <CustomersTable
+                count={paginatedCustomers.length}
+                page={page}
+                rows={paginatedCustomers}
+                rowsPerPage={rowsPerPage}
+            />
+        </Stack>
+    );
+}
+
+function applyPagination(rows: Customer[], page: number, rowsPerPage: number): Customer[] {
+    return rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 }
