@@ -1,11 +1,10 @@
-import React from 'react';
+"use client";
+import React, { useEffect } from 'react';
 // import type { Metadata } from 'next';
 import Grid from '@mui/material/Unstable_Grid2';
 // import dayjs from 'dayjs';
 // import { config } from '@/config';
 // import { Test } from '@/components/dashboard/layout/test';
-// import type { Schema } from '@/../amplify/data/resource';
-// import { generateClient } from 'aws-amplify/data';
 // import { Budget } from '@/components/dashboard/overview/budget';
 // import { LatestOrders } from '@/components/dashboard/overview/latest-orders';
 // import { LatestProducts } from '@/components/dashboard/overview/latest-products';
@@ -27,7 +26,10 @@ import { ArrowRight as ArrowRightIcon } from '@phosphor-icons/react/dist/ssr/Arr
 import { LineChart } from '@mui/x-charts/LineChart';
 import { PieChart } from '@mui/x-charts/PieChart';
 
-// const client = generateClient<Schema>();
+import type { Schema } from '@/../amplify/data/resource';
+import { generateClient } from 'aws-amplify/data';
+
+const client = generateClient<Schema>();
 // export const metadata = { title: `Overview | Dashboard | ${config.site.name}` } satisfies Metadata;
 interface PopulationPageProps {
     params: {
@@ -35,16 +37,36 @@ interface PopulationPageProps {
     };
 }
 
-export default async function Page({ params }: PopulationPageProps): Promise<React.JSX.Element> {
+export default function Page({ params }: PopulationPageProps): React.JSX.Element {
     const { id } = params;
     const checkId = decodeURIComponent(id).split("+");
     const prefecture = checkId[0];
     const city = checkId.length === 1 ? "" : checkId[1];
 
-    // const res = await client.models.SKM01.sKM01sByPrefectureAndCity({
-    //     prefecture,
-    //     city,
-    // });
+    async function fetchData(): Promise<void> {
+        // type SKM01QueryParams = Parameters<
+        //     typeof client.models.SKM01.sKM01sByPrefectureAndCity
+        // >[1];
+        const queryParams = {
+            prefecture,
+            // city: { eq: city },
+            // city
+        };
+        const { data, errors } = await client.models.SKM01.sKM01sByPrefectureAndCity(queryParams);
+        console.log(data);
+        console.log(errors);
+
+        const { data: SKM01 } = await client.models.SKM01.list();
+        console.log(SKM01);
+    };
+
+    useEffect(() => {
+        void fetchData();
+    }, []);
+
+
+    // const { data: SKM01 } = await client.models.SKM01.list();
+    // console.log(SKM01);
     return (
         <Grid container spacing={3}>
             {/* <Test /> */}

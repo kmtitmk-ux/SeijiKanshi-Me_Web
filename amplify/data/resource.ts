@@ -17,7 +17,13 @@ const schema = a.schema({
             population: a.integer(),
             prefecture: a.string()
         })
-        .authorization((allow) => [allow.guest()]),
+        .authorization((allow) => [allow.guest()])
+        .secondaryIndexes((index) => [
+            index("prefecture")
+                .sortKeys(["city"])
+                .queryField('sKM01sByPrefectureAndCity')
+
+        ])
 });
 
 export type Schema = ClientSchema<typeof schema>;
