@@ -154,7 +154,7 @@ export default function Page(): React.JSX.Element {
 export interface TimeSeriesProps {
     sx?: SxProps;
 }
-export function TimeSeries({ sx }: TimeSeriesProps): React.JSX.Element {
+function TimeSeries({ sx }: TimeSeriesProps): React.JSX.Element {
     const uData = [4000, 3000, 2000, 2780, 1890, 2390];
     const pData = [2400, 1398, 9800, 3908, 4800, 3800];
     const xLabels = [
@@ -166,7 +166,7 @@ export function TimeSeries({ sx }: TimeSeriesProps): React.JSX.Element {
         '2025',
     ];
     return (
-        <Card sx={sx}>
+        <Card sx={sx as SxProps}>
             <CardHeader
                 action={
                     <Button color="inherit" size="small" startIcon={<ArrowClockwiseIcon fontSize="var(--icon-fontSize-md)" />}>
@@ -199,9 +199,9 @@ export function TimeSeries({ sx }: TimeSeriesProps): React.JSX.Element {
 export interface ByAgeProps {
     sx?: SxProps;
 }
-export function ByAge({ sx }: ByAgeProps): React.JSX.Element {
+function ByAge({ sx }: ByAgeProps): React.JSX.Element {
     return (
-        <Card sx={sx}>
+        <Card sx={sx as SxProps}>
             <CardHeader
                 action={
                     <Button color="inherit" size="small" startIcon={<ArrowClockwiseIcon fontSize="var(--icon-fontSize-md)" />}>
