@@ -1,67 +1,45 @@
 'use client';
 
 import * as React from 'react';
-import Button from '@mui/material/Button';
+// import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
+// import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Divider from '@mui/material/Divider';
 // import { alpha, useTheme } from '@mui/material/styles';
 import type { SxProps } from '@mui/material/styles';
-import { ArrowClockwise as ArrowClockwiseIcon } from '@phosphor-icons/react/dist/ssr/ArrowClockwise';
-import { ArrowRight as ArrowRightIcon } from '@phosphor-icons/react/dist/ssr/ArrowRight';
+// import { ArrowClockwise as ArrowClockwiseIcon } from '@phosphor-icons/react/dist/ssr/ArrowClockwise';
+// import { ArrowRight as ArrowRightIcon } from '@phosphor-icons/react/dist/ssr/ArrowRight';
 // import type { ApexOptions } from 'apexcharts';
 import { BarChart } from '@mui/x-charts/BarChart';
 
 
 export interface SalesProps {
-    // chartSeries: { name: string; data: number[] }[];
     sx?: SxProps;
+    barGraphCity: Record<string, Record<string, number>>;
 }
 
-export function Sales({ sx }: SalesProps): React.JSX.Element {
-    const maleData = [4000, 3000, 2000, 2780, 1890, 2390, 3490, 4000, 3000, 2000, 2780, 1890, 2390, 3490, 4000, 3000, 2000, 2780, 1890, 2390, 3490, 4000, 3000];
-    const femaleData = [2400, 1398, 9800, 3908, 4800, 3800, 4300, 2400, 1398, 9800, 3908, 4800, 3800, 4300, 2400, 1398, 9800, 3908, 4800, 3800, 4300, 2400, 1398];
-    const xLabels = [
-        "千代田区",
-        "中央区",
-        "港区",
-        "新宿区",
-        "文京区",
-        "台東区",
-        "墨田区",
-        "江東区",
-        "品川区",
-        "目黒区",
-        "大田区",
-        "世田谷区",
-        "渋谷区",
-        "中野区",
-        "杉並区",
-        "豊島区",
-        "北区",
-        "荒川区",
-        "板橋区",
-        "練馬区",
-        "足立区",
-        "葛飾区",
-        "江戸川区"
-    ];
-
-    // const chartOptions = useChartOptions();
-    const handleBarClick = (_: React.MouseEvent<SVGElement>, { dataIndex }: { dataIndex: number }): void => {
-        console.log(xLabels[dataIndex])
+export function Sales({ sx, barGraphCity }: SalesProps): React.JSX.Element {
+    const maleData = [], femaleData = [];
+    const xLabels = Object.keys(barGraphCity);
+    for (const k in barGraphCity) {
+        maleData.push(barGraphCity[k]["男性"] ?? 0);
+        femaleData.push(barGraphCity[k]["女性"] ?? 0);
     }
+
+    const handleBarClick = (_: React.MouseEvent<SVGElement>, { dataIndex }: { dataIndex: number; }): void => {
+        console.log(xLabels[dataIndex]);
+    };
 
     return (
         <Card sx={sx}>
             <CardHeader
-                action={
-                    <Button color="inherit" size="small" startIcon={<ArrowClockwiseIcon fontSize="var(--icon-fontSize-md)" />}>
-                        Sync
-                    </Button>
-                }
+                // action={
+                //     <Button color="inherit" size="small" startIcon={<ArrowClockwiseIcon fontSize="var(--icon-fontSize-md)" />}>
+                //         Sync
+                //     </Button>
+                // }
                 title="東京都の市区町村別人口比較"
             />
             <CardContent sx={{ overflow: "auto" }}>
@@ -77,11 +55,11 @@ export function Sales({ sx }: SalesProps): React.JSX.Element {
                 />
             </CardContent>
             <Divider />
-            <CardActions sx={{ justifyContent: 'flex-end' }}>
+            {/* <CardActions sx={{ justifyContent: 'flex-end' }}>
                 <Button color="inherit" endIcon={<ArrowRightIcon fontSize="var(--icon-fontSize-md)" />} size="small">
                     Overview
                 </Button>
-            </CardActions>
+            </CardActions> */}
         </Card>
     );
 }

@@ -25,11 +25,8 @@ function noop(): void {
 
 export interface Customer {
     id: string;
-    avatar: string;
     prefecture: string;
     city: string;
-    address: { city: string; state: string; country: string; street: string; };
-    phone: string;
     updatedAt: Date;
 }
 
