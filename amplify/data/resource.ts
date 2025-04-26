@@ -9,7 +9,6 @@ and "delete" any "Todo" records.
 const schema = a.schema({
     SKM01: a
         .model({
-            content: a.string(),
             sex: a.string(),
             age: a.string(),
             city: a.string(),
