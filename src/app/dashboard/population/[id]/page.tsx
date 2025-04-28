@@ -43,30 +43,37 @@ export default function Page({ params }: PopulationPageProps): React.JSX.Element
     const [barGraphCity, setBarGraphCity] = useState<Record<string, Record<string, number>>>({});
 
     async function fetchData(): Promise<void> {
-        // type SKM01QueryParams = Parameters<
-        //     typeof client.models.SKM01.sKM01sByPrefectureAndCity
-        // >[1];
-        const queryParams = {
-            prefecture,
-            ...(city ? { city: { eq: city } } : {})
-        };
-        const { data/*, errors*/ } = await client.models.SKM01.sKM01sByPrefectureAndCity(queryParams);
+        type SKM01QueryParams = Parameters<
+            typeof client.models.SKM01.sKM01sByPrefectureAndCity
+        >[0];
+        let items: Schema['SKM01']['type'][] = [];
+        let nextToken: string | null | undefined = "";
+        do {
+            const queryParams: SKM01QueryParams = {
+                prefecture,
+                ...(city ? { city: { eq: city } } : {}),
+                ...(nextToken ? { nextToken } : {}),
+            };
+            const { data/*, errors*/, nextToken: newNextToken } = await client.models.SKM01.sKM01sByPrefectureAndCity(queryParams);
+            nextToken = newNextToken;
+            items = [...items, ...data];
+        } while (nextToken);
         const yearData: Record<string, number> = {};
         const ageData: Record<string, number> = {};
         const cityData: Record<string, Record<string, number>> = {};
-        for (const v of data) {
+        for (const v of items) {
             if (v.point) {
                 if (!yearData[v.point]) yearData[v.point] = 0;
                 yearData[v.point] += v.population ?? 0;
             }
             if (v.age) {
                 if (!ageData[v.age]) ageData[v.age] = 0;
-                ageData[v.age] += v.population ?? 0;
+                if (v.point === "2024") ageData[v.age] += v.population ?? 0;
             }
             if (v.city) {
                 if (!cityData[v.city]) cityData[v.city] = { "男性": 0, "女性": 0 };
-                if (v.sex === "男") cityData[v.city]["男性"] += v.population ?? 0;
-                if (v.sex === "女") cityData[v.city]["女性"] += v.population ?? 0;
+                if (v.sex === "男" && v.point === "2024") cityData[v.city]["男性"] += v.population ?? 0;
+                if (v.sex === "女" && v.point === "2024") cityData[v.city]["女性"] += v.population ?? 0;
             }
         }
         if (Object.keys(yearData).length) setLineGraphYear(yearData);
@@ -76,8 +83,44 @@ export default function Page({ params }: PopulationPageProps): React.JSX.Element
         // console.log(SKM01);
     };
 
+    // ファイルのURLを取得
+    async function fetchFileUrl(): Promise<void> {
+        try {
+            const resultս: StorageGetUrlOutput = await getUrl({
+                path: 'public/sample.jpg', // S3内のファイルパス
+                options: {
+                    accessLevel: 'public', // public, protected, private
+                },
+            });
+            console.log(resultս);
+            // setFileUrl(result.url.toString());
+        } catch (error) {
+            console.error('Error fetching file URL:', error);
+        }
+    };
+
+    // // ファイルの内容を取得
+    // const downloadFile = async () => {
+    //     try {
+    //         const result: any = await downloadData({
+    //             path: 'public/sample.txt',
+    //             options: {
+    //                 accessLevel: 'public',
+    //             },
+    //         });
+    //         // setFileContent(result.body.toString());
+    //     } catch (error) {
+    //         console.error('Error downloading file:', error);
+    //     }
+    // };
+
     useEffect(() => {
-        void fetchData();
+        fetchFileUrl();
+        // downloadFile();
+    }, []);
+
+    useEffect(() => {
+        // void fetchData();
     }, []);
 
     // const { data: SKM01 } = await client.models.SKM01.list();

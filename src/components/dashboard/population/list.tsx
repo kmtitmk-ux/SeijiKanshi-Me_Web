@@ -24,14 +24,20 @@ export function List(): React.JSX.Element {
     const listData = useMemo(() => [
         {
             id: '1',
-            prefecture: '東京都',
-            city: '港区',
+            prefecture: '神奈川県',
+            city: '横浜市神奈川区',
             updatedAt: dayjs().subtract(2, 'hours').toDate(),
         },
         {
             id: '2',
-            prefecture: '東京都',
-            city: '千代田区',
+            prefecture: '神奈川県',
+            city: '大和市',
+            updatedAt: dayjs().subtract(2, 'hours').toDate(),
+        },
+        {
+            id: '3',
+            prefecture: '神奈川県',
+            city: '藤沢市',
             updatedAt: dayjs().subtract(2, 'hours').toDate(),
         },
     ], []);
