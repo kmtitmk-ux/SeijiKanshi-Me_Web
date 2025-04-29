@@ -4,7 +4,6 @@ import React, { useEffect } from 'react';
 import Grid from '@mui/material/Unstable_Grid2';
 // import dayjs from 'dayjs';
 // import { config } from '@/config';
-// import { Test } from '@/components/dashboard/layout/test';
 // import { Budget } from '@/components/dashboard/overview/budget';
 // import { LatestOrders } from '@/components/dashboard/overview/latest-orders';
 // import { LatestProducts } from '@/components/dashboard/overview/latest-products';
@@ -25,12 +24,8 @@ import { ArrowClockwise as ArrowClockwiseIcon } from '@phosphor-icons/react/dist
 import { ArrowRight as ArrowRightIcon } from '@phosphor-icons/react/dist/ssr/ArrowRight';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { PieChart } from '@mui/x-charts/PieChart';
+import { downloadData } from 'aws-amplify/storage';
 
-import type { Schema } from '@/../amplify/data/resource';
-import { generateClient } from 'aws-amplify/data';
-
-const client = generateClient<Schema>();
-// export const metadata = { title: `Overview | Dashboard | ${config.site.name}` } satisfies Metadata;
 interface PopulationPageProps {
     params: {
         id: string;
@@ -44,32 +39,48 @@ export default function Page({ params }: PopulationPageProps): React.JSX.Element
     const city = checkId.length === 1 ? "" : checkId[1];
 
     async function fetchData(): Promise<void> {
-        // type SKM01QueryParams = Parameters<
-        //     typeof client.models.SKM01.sKM01sByPrefectureAndCity
-        // >[1];
-        const queryParams = {
-            prefecture,
-            // city: { eq: city },
-            // city
-        };
-        const { data, errors } = await client.models.SKM01.sKM01sByPrefectureAndCity(queryParams);
-        console.log(data);
-        console.log(errors);
+        const downloadResult = await downloadData({
+            path: "picture-submissions/kanagawaEditJsonLine.jsonl",
+            options: {
+                // Specify a target bucket using name assigned in Amplify Backend
+                bucket: "SKM01"
+            }
+        }).result;
+        const text = await downloadResult.body.text();
 
-        const { data: SKM01 } = await client.models.SKM01.list();
-        console.log(SKM01);
-    };
+        // 行ごとに分割し、空行を除外
+        const lines = text.split('\n').filter(line => line.trim() !== '');
+        interface DataProps {
+            id: string;
+            updatedAt: string;
+            __typename: string;
+            sex: string;
+            age: string,
+            city: string;
+            point: string;
+            population: number;
+            prefecture: string;
+        };
+
+        // 各行をJSONとしてパース
+        const parsedData: DataProps[] = lines.map((line: string, index: number) => {
+            try {
+                return JSON.parse(line) as DataProps;
+            } catch (error) {
+                console.error(`Error parsing line ${index + 1}:`, line, error);
+                return null;
+            }
+        }).filter(item => item !== null);
+        console.log(parsedData);
+    }
 
     useEffect(() => {
+        // void fetchData()
         void fetchData();
     }, []);
 
-
-    // const { data: SKM01 } = await client.models.SKM01.list();
-    // console.log(SKM01);
     return (
         <Grid container spacing={3}>
-            {/* <Test /> */}
             {/* <Grid lg={3} sm={6} xs={12}>
         <Budget diff={12} trend="up" sx={{ height: '100%' }} value="$24k" />
       </Grid>
