@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react';
 import Grid from '@mui/material/Unstable_Grid2';
 // import dayjs from 'dayjs';
 // import { config } from '@/config';
-// import { Test } from '@/components/dashboard/layout/test';
 // import { Budget } from '@/components/dashboard/overview/budget';
 // import { LatestOrders } from '@/components/dashboard/overview/latest-orders';
 // import { LatestProducts } from '@/components/dashboard/overview/latest-products';
@@ -13,10 +12,9 @@ import { Sales } from '@/components/dashboard/overview/sales';
 // import { TotalCustomers } from '@/components/dashboard/overview/total-customers';
 // import { TotalProfit } from '@/components/dashboard/overview/total-profit';
 // import { Traffic } from '@/components/dashboard/overview/traffic';
-
 // import Button from '@mui/material/Button';
-import Card from '@mui/material/Card';
 // import CardActions from '@mui/material/CardActions';
+import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Divider from '@mui/material/Divider';
@@ -25,11 +23,8 @@ import type { SxProps } from '@mui/material/styles';
 // import { ArrowRight as ArrowRightIcon } from '@phosphor-icons/react/dist/ssr/ArrowRight';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { PieChart } from '@mui/x-charts/PieChart';
-import type { Schema } from '@/../amplify/data/resource';
-import { generateClient } from 'aws-amplify/data';
+import { downloadData } from 'aws-amplify/storage';
 
-const client = generateClient<Schema>();
-// export const metadata = { title: `Overview | Dashboard | ${config.site.name}` } satisfies Metadata;
 interface PopulationPageProps {
     params: { id: string; };
 }
@@ -43,21 +38,46 @@ export default function Page({ params }: PopulationPageProps): React.JSX.Element
     const [barGraphCity, setBarGraphCity] = useState<Record<string, Record<string, number>>>({});
 
     async function fetchData(): Promise<void> {
-        type SKM01QueryParams = Parameters<
-            typeof client.models.SKM01.sKM01sByPrefectureAndCity
-        >[0];
-        let items: Schema['SKM01']['type'][] = [];
-        let nextToken: string | null | undefined = "";
-        do {
-            const queryParams: SKM01QueryParams = {
-                prefecture,
-                ...(city ? { city: { eq: city } } : {}),
-                ...(nextToken ? { nextToken } : {}),
-            };
-            const { data/*, errors*/, nextToken: newNextToken } = await client.models.SKM01.sKM01sByPrefectureAndCity(queryParams);
-            nextToken = newNextToken;
-            items = [...items, ...data];
-        } while (nextToken);
+        const downloadResult = await downloadData({
+            path: "public-data/神奈川県.jsonl",
+            options: {
+                // Specify a target bucket using name assigned in Amplify Backend
+                bucket: "SKM01"
+            }
+        }).result;
+        const text = await downloadResult.body.text();
+
+        // 行ごとに分割し、空行を除外
+        const lines = text.split('\n').filter(line => line.trim() !== '');
+        interface DataProps {
+            id: string;
+            updatedAt: string;
+            __typename: string;
+            sex: string;
+            age: string,
+            city: string;
+            point: string;
+            population: number;
+            prefecture: string;
+        };
+
+        // 各行をJSONとしてパース
+        const parsedData: DataProps[] = lines.map((line: string, index: number) => {
+            try {
+                return JSON.parse(line) as DataProps;
+            } catch (error) {
+                console.error(`Error parsing line ${index + 1}:`, line, error);
+                return null;
+            }
+        }).filter(item => item !== null);
+
+        let items: DataProps[] = [];
+        if (city) {
+            items = parsedData.filter(item => item.city === city);
+        } else {
+            items = [...parsedData];
+        }
+
         const yearData: Record<string, number> = {};
         const ageData: Record<string, number> = {};
         const cityData: Record<string, Record<string, number>> = {};
@@ -79,55 +99,15 @@ export default function Page({ params }: PopulationPageProps): React.JSX.Element
         if (Object.keys(yearData).length) setLineGraphYear(yearData);
         if (Object.keys(cityData).length) setBarGraphCity(cityData);
         if (Object.keys(ageData).length) setPieChartAge(ageData);
-        // const { data: SKM01 } = await client.models.SKM01.list();
-        // console.log(SKM01);
-    };
-
-    // ファイルのURLを取得
-    async function fetchFileUrl(): Promise<void> {
-        try {
-            const resultս: StorageGetUrlOutput = await getUrl({
-                path: 'public/sample.jpg', // S3内のファイルパス
-                options: {
-                    accessLevel: 'public', // public, protected, private
-                },
-            });
-            console.log(resultս);
-            // setFileUrl(result.url.toString());
-        } catch (error) {
-            console.error('Error fetching file URL:', error);
-        }
-    };
-
-    // // ファイルの内容を取得
-    // const downloadFile = async () => {
-    //     try {
-    //         const result: any = await downloadData({
-    //             path: 'public/sample.txt',
-    //             options: {
-    //                 accessLevel: 'public',
-    //             },
-    //         });
-    //         // setFileContent(result.body.toString());
-    //     } catch (error) {
-    //         console.error('Error downloading file:', error);
-    //     }
-    // };
+    }
 
     useEffect(() => {
-        fetchFileUrl();
-        // downloadFile();
+        // void fetchData()
+        void fetchData();
     }, []);
 
-    useEffect(() => {
-        // void fetchData();
-    }, []);
-
-    // const { data: SKM01 } = await client.models.SKM01.list();
-    // console.log(SKM01);
     return (
         <Grid container spacing={3}>
-            {/* <Test /> */}
             {/* <Grid lg={3} sm={6} xs={12}>
         <Budget diff={12} trend="up" sx={{ height: '100%' }} value="$24k" />
       </Grid>

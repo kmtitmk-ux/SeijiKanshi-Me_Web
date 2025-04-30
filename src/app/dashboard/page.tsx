@@ -1,14 +1,12 @@
 import React from 'react';
 import type { Metadata } from 'next';
-// import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-
 import { List } from '@/components/dashboard/population/list';
+// import Button from '@mui/material/Button';
 // import { Plus as PlusIcon } from '@phosphor-icons/react/dist/ssr/Plus';
 // import { Upload as UploadIcon } from '@phosphor-icons/react/dist/ssr/Upload';
 import { config } from '@/config';
-
 
 export const metadata = { title: `Customers | Dashboard | ${config.site.name}` } satisfies Metadata;
 
