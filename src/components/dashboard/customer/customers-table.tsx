@@ -15,7 +15,6 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 // import Typography from '@mui/material/Typography';
-import dayjs from 'dayjs';
 
 import { useSelection } from '@/hooks/use-selection';
 
@@ -25,9 +24,7 @@ function noop(): void {
 
 export interface Customer {
     id: string;
-    prefecture: string;
-    city: string;
-    updatedAt: Date;
+    updatedAt: string;
 }
 
 interface CustomersTableProps {
@@ -69,7 +66,6 @@ export function CustomersTable({
                                 />
                             </TableCell>
                             <TableCell>都道府県</TableCell>
-                            <TableCell>市区群</TableCell>
                             <TableCell>更新日</TableCell>
                         </TableRow>
                     </TableHead>
@@ -94,13 +90,10 @@ export function CustomersTable({
                                         <Stack sx={{ alignItems: 'center' }} direction="row" spacing={2}>
                                             {/* <Avatar src={row.avatar} /> */}
                                             {/* <Typography variant="subtitle2">{row.prefecture}</Typography> */}
-                                            <Link href={`/dashboard/population/${row.prefecture}`}>{row.prefecture}</Link>
+                                            <Link href={`/dashboard/population/${row.id}`}>{row.id}</Link>
                                         </Stack>
                                     </TableCell>
-                                    <TableCell>
-                                        <Link href={`/dashboard/population/${row.prefecture}+${row.city}`}>{row.city}</Link>
-                                    </TableCell>
-                                    <TableCell>{dayjs(row.updatedAt).format('MMM D, YYYY')}</TableCell>
+                                    <TableCell>{row.updatedAt}</TableCell>
                                 </TableRow>
                             );
                         })}

@@ -10,20 +10,11 @@ export const storage = defineStorage({
         'public-data/*': [
             allow.authenticated.to(['read', 'write']),
             allow.guest.to(['read', 'write'])
-        ],
-    })
+        ]
+    }),
 });
 
 // export const firstBucket = defineStorage({
 //     name: 'firstBucket',
 //     isDefault: true, // identify your default storage bucket (required)
-// });
-
-// export const secondBucket = defineStorage({
-//     name: 'secondBucket',
-//     access: (allow) => ({
-//         'private/{entity_id}/*': [
-//             allow.entity('identity').to(['read', 'write', 'delete'])
-//         ]
-//     })
 // });
