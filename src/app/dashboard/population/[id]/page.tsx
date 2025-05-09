@@ -39,7 +39,7 @@ export default function Page({ params }: PopulationPageProps): React.JSX.Element
 
     async function fetchData(): Promise<void> {
         const downloadResult = await downloadData({
-            path: "public-data/神奈川県.jsonl",
+            path: `public-data/${prefecture}.jsonl`,
             options: {
                 // Specify a target bucket using name assigned in Amplify Backend
                 bucket: "SKM01"

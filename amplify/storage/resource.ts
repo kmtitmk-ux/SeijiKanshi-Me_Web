@@ -11,6 +11,10 @@ export const storage = defineStorage({
             allow.authenticated.to(['read', 'write']),
             allow.guest.to(['read', 'write'])
         ],
+        'public-data/': [ // ディレクトリ自体のリスト許可
+            allow.authenticated.to(['read']),
+            allow.guest.to(['read'])
+        ],
     })
 });
 
