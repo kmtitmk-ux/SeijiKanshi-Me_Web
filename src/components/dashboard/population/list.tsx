@@ -89,6 +89,7 @@ export function List(): React.JSX.Element {
                 const word = searchWords[0];
                 return v.id.includes(word);
             }
+            return false;
             // if (searchWords.length === 1) {
             //     const word = searchWords[0];
             //     return v.prefecture.includes(word) || v.city.includes(word);

@@ -17,16 +17,8 @@ export const metadata = { title: `Customers | Dashboard | ${config.site.name}` }
 
 const customers = [
     {
-        id: '1',
-        prefecture: '東京都',
-        city: '港区',
-        updatedAt: dayjs().subtract(2, 'hours').toDate(),
-    },
-    {
-        id: '2',
-        prefecture: '東京都',
-        city: '千代田区',
-        updatedAt: dayjs().subtract(2, 'hours').toDate(),
+        id: '東京都',
+        updatedAt: dayjs().subtract(2, 'hours').format("YYY/MM/DD"),
     },
 ] satisfies Customer[];
 export default function Page(): React.JSX.Element {

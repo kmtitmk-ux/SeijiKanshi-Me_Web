@@ -10,17 +10,8 @@ export const storage = defineStorage({
         'public-data/*': [
             allow.authenticated.to(['read', 'write']),
             allow.guest.to(['read', 'write'])
-<<<<<<< HEAD
-        ],
-        'public-data/': [ // ディレクトリ自体のリスト許可
-            allow.authenticated.to(['read']),
-            allow.guest.to(['read'])
-        ],
-    })
-=======
         ]
     }),
->>>>>>> feature/202505
 });
 
 // export const firstBucket = defineStorage({
