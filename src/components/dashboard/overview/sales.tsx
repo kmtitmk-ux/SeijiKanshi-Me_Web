@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { useRouter } from 'next/navigation';
 // import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 // import CardActions from '@mui/material/CardActions';
@@ -18,18 +19,21 @@ import { BarChart } from '@mui/x-charts/BarChart';
 export interface SalesProps {
     sx?: SxProps;
     barGraphCity: Record<string, Record<string, number>>;
+    prefecture: string;
+    year: string;
 }
-
-export function Sales({ sx, barGraphCity }: SalesProps): React.JSX.Element {
+export function Sales({ sx, barGraphCity, prefecture, year }: SalesProps): React.JSX.Element {
     const maleData = [], femaleData = [];
     const xLabels = Object.keys(barGraphCity);
+    const router = useRouter();
+
     for (const k in barGraphCity) {
         maleData.push(barGraphCity[k]["男性"] ?? 0);
         femaleData.push(barGraphCity[k]["女性"] ?? 0);
     }
 
     const handleBarClick = (_: React.MouseEvent<SVGElement>, { dataIndex }: { dataIndex: number; }): void => {
-        console.log(xLabels[dataIndex]);
+        router.push(`/dashboard/population/${year}/${prefecture}+${xLabels[dataIndex]}`);
     };
 
     return (
@@ -40,7 +44,7 @@ export function Sales({ sx, barGraphCity }: SalesProps): React.JSX.Element {
                 //         Sync
                 //     </Button>
                 // }
-                title="東京都の市区町村別人口比較"
+                title={`${prefecture}の市区町村別人口比較`}
             />
             <CardContent sx={{ overflow: "auto" }}>
                 <BarChart
@@ -66,7 +70,6 @@ export function Sales({ sx, barGraphCity }: SalesProps): React.JSX.Element {
 
 // function useChartOptions(): ApexOptions {
 //     const theme = useTheme();
-
 //     return {
 //         chart: { background: 'transparent', stacked: false, toolbar: { show: false } },
 //         colors: [theme.palette.primary.main, alpha(theme.palette.primary.main, 0.25)],

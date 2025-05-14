@@ -8,7 +8,10 @@ import { List } from '@/components/dashboard/population/list';
 // import { Upload as UploadIcon } from '@phosphor-icons/react/dist/ssr/Upload';
 import { config } from '@/config';
 
-export const metadata = { title: `Customers | Dashboard | ${config.site.name}` } satisfies Metadata;
+export const metadata = {
+    title: `人口動態を都道府県別に監視・分析｜${config.site.name}`,
+    description: `全国47都道府県の人口動態データを一覧で確認。年齢構成や男女比、更新日などの統計情報を簡単にチェックできます。${config.site.name}。`,
+} satisfies Metadata;
 
 export default function Page(): React.JSX.Element {
     return (
@@ -16,6 +19,7 @@ export default function Page(): React.JSX.Element {
             <Stack direction="row" spacing={3}>
                 <Stack spacing={1} sx={{ flex: '1 1 auto' }}>
                     <Typography variant="h4">人口動態の監視</Typography>
+                    <Typography variant="subtitle2" gutterBottom>全国47都道府県の最新人口動態データを一覧で確認。年齢構成や男女比、更新日などの統計情報を簡単にチェックできます。</Typography>
                     {/* <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
                         <Button color="inherit" startIcon={<UploadIcon fontSize="var(--icon-fontSize-md)" />}>
                             Import
@@ -34,4 +38,4 @@ export default function Page(): React.JSX.Element {
             <List />
         </Stack>
     );
-}
+};

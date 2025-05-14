@@ -14,6 +14,8 @@ import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
+// import dayjs from 'dayjs';
+
 // import Typography from '@mui/material/Typography';
 
 import { useSelection } from '@/hooks/use-selection';
@@ -72,6 +74,7 @@ export function CustomersTable({
                     <TableBody>
                         {rows.map((row) => {
                             const isSelected = selected?.has(row.id);
+                            const updatePoint = Number(row.updatedAt.replace(/\//g, "").slice(0, 4) ?? 0) - 1;
                             return (
                                 <TableRow hover key={row.id} selected={isSelected}>
                                     <TableCell padding="checkbox">
@@ -90,7 +93,7 @@ export function CustomersTable({
                                         <Stack sx={{ alignItems: 'center' }} direction="row" spacing={2}>
                                             {/* <Avatar src={row.avatar} /> */}
                                             {/* <Typography variant="subtitle2">{row.prefecture}</Typography> */}
-                                            <Link href={`/dashboard/population/${row.id}`}>{row.id}</Link>
+                                            <Link href={`/dashboard/population/${updatePoint}/${row.id}`}>{`${row.id}(〜${updatePoint}年の統計）`}</Link>
                                         </Stack>
                                     </TableCell>
                                     <TableCell>{row.updatedAt}</TableCell>

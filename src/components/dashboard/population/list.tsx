@@ -36,45 +36,11 @@ export function List(): React.JSX.Element {
                     });
                 }
             }
-
             setOriginalItems(newList);
             setItems(applyPagination(newList));
         } catch (error) {
             console.error('エラー:', error);
         }
-
-        // const downloadResult = await downloadData({
-        //     path: "public-data/神奈川県.jsonl",
-        //     options: {
-        //         // Specify a target bucket using name assigned in Amplify Backend
-        //         bucket: "SKM01"
-        //     }
-        // }).result;
-        // const text = await downloadResult.body.text();
-
-        // // 行ごとに分割し、空行を除外
-        // const lines = text.split('\n').filter(line => line.trim() !== '');
-        // interface DataProps {
-        //     id: string;
-        //     updatedAt: Date;
-        //     __typename: string;
-        //     sex: string;
-        //     age: string,
-        //     city: string;
-        //     point: string;
-        //     population: number;
-        //     prefecture: string;
-        // };
-
-        // // 各行をJSONとしてパース
-        // const parsedData: DataProps[] = lines.map((line: string, index: number) => {
-        //     try {
-        //         return JSON.parse(line) as DataProps;
-        //     } catch (error) {
-        //         console.error(`Error parsing line ${index + 1}:`, line, error);
-        //         return null;
-        //     }
-        // }).filter(item => item !== null);
     }
 
     useEffect(() => {
