@@ -17,6 +17,7 @@ import type { SxProps } from '@mui/material/styles';
 import { LineChart } from '@mui/x-charts/LineChart';
 import type { MarkElementProps } from '@mui/x-charts/LineChart';
 import { PieChart } from '@mui/x-charts/PieChart';
+import type { PieItemIdentifier, DefaultizedPieValueType } from '@mui/x-charts/models';
 import Grid from '@mui/material/Unstable_Grid2';
 // import dayjs from 'dayjs';
 
@@ -59,14 +60,12 @@ function TimeSeries({ sx, prefecture, city, lineGraphYear }: TimeSeriesProps): R
     const xLabels: string[] = [];
     const points: string[] = Object.keys(lineGraphYear);
     const diff = Number(points[points.length - 1] ?? 0) - Number(points[0]);
-
     // xLabels と data を作成
     for (let i = 0; i <= diff; i++) {
         const point = String(Number(points[0] ?? 0) + i);
         xLabels.push(point);
         data.push(lineGraphYear[point] ?? 0);
     }
-
     return (
         <Card sx={sx}>
             <CardHeader
@@ -100,16 +99,35 @@ interface ByAgeProps {
     prefecture: string;
     city: string;
     pieChartAge: Record<string, number>;
+    year: string;
 }
-function ByAge({ sx, prefecture, city, pieChartAge }: ByAgeProps): React.JSX.Element {
-    const data = [];
+interface PieData {
+    id: string;
+    value: number;
+    label: string;
+    link: string;
+}
+function ByAge({ sx, prefecture, city, pieChartAge, year }: ByAgeProps): React.JSX.Element {
+    const router = useRouter();
+    const data: PieData[] = [];
+    const id = city ? `${prefecture}+${city}` : prefecture;
     for (const k in pieChartAge) {
         data.push({
             id: k,
             value: pieChartAge[k],
-            label: k === "85" ? `${k}歳以上` : `${k.replace("-", "～")}歳`
+            label: k === "85" ? `${k}歳以上` : `${k.replace("-", "～")}歳`,
+            link: `/dashboard/population/${year}/${id}/${k}`
         });
     }
+
+    function handleClick(
+        _event: React.MouseEvent<SVGPathElement>,
+        itemIdentifier: PieItemIdentifier,
+        _item: DefaultizedPieValueType
+    ): void {
+        const clicked = data[itemIdentifier.dataIndex];
+        if (clicked?.link) router.push(clicked.link);
+    };
 
     return (
         <Card sx={sx}>
@@ -119,13 +137,14 @@ function ByAge({ sx, prefecture, city, pieChartAge }: ByAgeProps): React.JSX.Ele
                 //         Sync
                 //     </Button>
                 // }
-                title={`${prefecture}${city}の年齢別人口分布`}
+                title={`${prefecture}${city}の年齢別人口分布（${year}年）`}
             />
             <CardContent sx={{ overflow: "auto" }}>
                 <PieChart
                     series={[{ data }]}
                     width={undefined}
                     height={400}
+                    onItemClick={handleClick}
                 />
             </CardContent>
         </Card>
@@ -136,12 +155,12 @@ export interface DetailProps {
     year: string;
     prefecture: string;
     city: string;
+    age?: string;
 }
-export function Detail({ year, prefecture, city }: DetailProps): React.JSX.Element {
+export function Detail({ year, prefecture, city, age }: DetailProps): React.JSX.Element {
     const [lineGraphYear, setLineGraphYear] = useState<Record<string, number>>({});
     const [pieChartAge, setPieChartAge] = useState<Record<string, number>>({});
     const [barGraphCity, setBarGraphCity] = useState<Record<string, Record<string, number>>>({});
-
     async function fetchData(): Promise<void> {
         const downloadResult = await downloadData({
             path: `public-data/${prefecture}.jsonl`,
@@ -172,28 +191,25 @@ export function Detail({ year, prefecture, city }: DetailProps): React.JSX.Eleme
                 return null;
             }
         }).filter(item => item !== null);
-        let items: DataProps[] = [];
-        if (city) {
-            items = parsedData.filter(item => item.city === city);
-        } else {
-            items = [...parsedData];
-        }
+        const checkCity = city ? city : "";
+        const checkAge = age ? age : "総計";
+        const items = [...parsedData];
         const yearData: Record<string, number> = {};
         const ageData: Record<string, number> = {};
         const cityData: Record<string, Record<string, number>> = {};
         for (const v of items) {
-            if (v.point) {
+            if (v.point && v.city === checkCity && v.age === checkAge) {
                 if (!yearData[v.point]) yearData[v.point] = 0;
                 yearData[v.point] += v.population ?? 0;
             }
-            if (v.age) {
-                if (!ageData[v.age]) ageData[v.age] = 0;
-                if (v.point === year) ageData[v.age] += v.population ?? 0;
-            }
-            if (v.city) {
+            if (v.city && !city && v.point === year && v.age === checkAge) {
                 if (!cityData[v.city]) cityData[v.city] = { "男性": 0, "女性": 0 };
-                if (v.sex === "男" && v.point === year) cityData[v.city]["男性"] += v.population ?? 0;
-                if (v.sex === "女" && v.point === year) cityData[v.city]["女性"] += v.population ?? 0;
+                if (v.sex === "男") cityData[v.city]["男性"] += v.population ?? 0;
+                if (v.sex === "女") cityData[v.city]["女性"] += v.population ?? 0;
+            }
+            if (v.age && !age && v.city === checkCity && v.point === year && v.age !== checkAge) {
+                if (!ageData[v.age]) ageData[v.age] = 0;
+                ageData[v.age] += v.population ?? 0;
             }
         }
         if (Object.keys(yearData).length) setLineGraphYear(yearData);
@@ -207,6 +223,28 @@ export function Detail({ year, prefecture, city }: DetailProps): React.JSX.Eleme
 
     return (
         <>
+            {Object.keys(barGraphCity).length > 0 && (
+                <Grid lg={12}>
+                    <Sales
+                        sx={{ height: '100%' }}
+                        barGraphCity={barGraphCity}
+                        year={year}
+                        prefecture={prefecture}
+                        age={age}
+                    />
+                </Grid>
+            )}
+            {Object.keys(pieChartAge).length > 0 && (
+                <Grid lg={12}>
+                    <ByAge
+                        sx={{ height: '100%' }}
+                        pieChartAge={pieChartAge}
+                        year={year}
+                        prefecture={prefecture}
+                        city={city}
+                    />
+                </Grid>
+            )}
             <Grid lg={12}>
                 <TimeSeries
                     sx={{ height: '100%' }}
@@ -215,26 +253,6 @@ export function Detail({ year, prefecture, city }: DetailProps): React.JSX.Eleme
                     lineGraphYear={lineGraphYear}
                 />
             </Grid>
-            {!city && (
-                <Grid lg={12}>
-                    <Sales
-                        sx={{ height: '100%' }}
-                        barGraphCity={barGraphCity}
-                        year={year}
-                        prefecture={prefecture}
-                    />
-                </Grid>
-            )}
-            {Object.keys(pieChartAge).length > 0 && (
-                <Grid lg={12}>
-                    <ByAge
-                        sx={{ height: '100%' }}
-                        prefecture={prefecture}
-                        city={city}
-                        pieChartAge={pieChartAge}
-                    />
-                </Grid>
-            )}
         </>
     );
 }

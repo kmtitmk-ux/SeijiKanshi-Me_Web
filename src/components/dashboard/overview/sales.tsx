@@ -21,8 +21,9 @@ export interface SalesProps {
     barGraphCity: Record<string, Record<string, number>>;
     prefecture: string;
     year: string;
+    age?: string;
 }
-export function Sales({ sx, barGraphCity, prefecture, year }: SalesProps): React.JSX.Element {
+export function Sales({ sx, barGraphCity, prefecture, year, age }: SalesProps): React.JSX.Element {
     const maleData = [], femaleData = [];
     const xLabels = Object.keys(barGraphCity);
     const router = useRouter();
@@ -31,6 +32,7 @@ export function Sales({ sx, barGraphCity, prefecture, year }: SalesProps): React
         maleData.push(barGraphCity[k]["男性"] ?? 0);
         femaleData.push(barGraphCity[k]["女性"] ?? 0);
     }
+    const title = age ? `${prefecture}の市区町村別・${age.replace("-", "～")}歳人口の比較` : `${prefecture}の市区町村別人口比較`;
 
     const handleBarClick = (_: React.MouseEvent<SVGElement>, { dataIndex }: { dataIndex: number; }): void => {
         router.push(`/dashboard/population/${year}/${prefecture}+${xLabels[dataIndex]}`);
@@ -44,7 +46,7 @@ export function Sales({ sx, barGraphCity, prefecture, year }: SalesProps): React
                 //         Sync
                 //     </Button>
                 // }
-                title={`${prefecture}の市区町村別人口比較`}
+                title={`${title}（${year}年）`}
             />
             <CardContent sx={{ overflow: "auto" }}>
                 <BarChart
