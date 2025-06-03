@@ -50,11 +50,11 @@ export function CustomMark(props: CustomMarkProps & MarkElementProps): React.JSX
 
 interface TimeSeriesProps {
     sx?: SxProps;
-    lineGraphYear: Record<string, number>[];
+    lineGraphYear: DataProps[];
 }
 function TimeSeries({ sx, lineGraphYear }: TimeSeriesProps): React.JSX.Element {
     const series = [];
-    const outPut: Record<string, Record<string, number>> = {};
+    const outPut: Record<string, Record<string, string | number>> = {};
     const points: number[] = [];
 
     // データ整形: 年ごとのデータを outPut に格納
@@ -89,7 +89,8 @@ function TimeSeries({ sx, lineGraphYear }: TimeSeriesProps): React.JSX.Element {
         const data: number[] = [];
         for (let i = 0; i <= diff; i++) {
             const year = String(startYear + i);
-            const value = outPut[year]?.[cat] ?? 0;
+            const rawValue = outPut[year]?.[cat] ?? 0;
+            const value = typeof rawValue === "number" ? rawValue : Number(rawValue) || 0;
             data.push(value);
         }
         series.push({ label: cat, data });
@@ -105,7 +106,7 @@ function TimeSeries({ sx, lineGraphYear }: TimeSeriesProps): React.JSX.Element {
                     height={300}
                     series={series}
                     xAxis={[{ scaleType: 'point', data: xLabels }]}
-                    yAxis={[{ width: 50 }]}
+                // yAxis={[{ width: 50 }]}
                 />
             </CardContent>
             <Divider />

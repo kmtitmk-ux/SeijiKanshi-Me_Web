@@ -2,8 +2,8 @@ import React from 'react';
 import type { Metadata } from 'next';
 import { List } from '@/components/dashboard/prefectural-assembly/prefecture/list';
 import { config } from '@/config';
-import Grid from '@mui/material/Unstable_Grid2';
-import { Typography, Breadcrumbs, Link, Stack } from '@mui/material';
+// import Grid from '@mui/material/Unstable_Grid2';
+import { Typography, /*Breadcrumbs, Link, */Stack } from '@mui/material';
 // import { config } from '@/config';
 // import { Budget } from '@/components/dashboard/overview/budget';
 // import dayjs from 'dayjs';
@@ -55,7 +55,7 @@ export async function generateMetadata({ params }: PrefecturalAssemblyPageProps)
 }
 
 export default function Page({ params }: PrefecturalAssemblyPageProps): React.JSX.Element {
-    const { year, prefecture, city } = parseParams(params);
+    const { prefecture /*,year, city*/ } = parseParams(params);
     return (
         <Stack spacing={3}>
             <Stack direction="row" spacing={3}>
