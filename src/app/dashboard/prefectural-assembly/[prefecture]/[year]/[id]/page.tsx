@@ -1,9 +1,9 @@
 import React from 'react';
 import type { Metadata } from 'next';
-import { Detail } from '@/components/dashboard/population/detail';
-import { config } from '@/config';
 import Grid from '@mui/material/Unstable_Grid2';
+import { Detail } from '@/components/dashboard/population/detail';
 import { Typography, Breadcrumbs, Link } from '@mui/material';
+import { config } from '@/config';
 // import { config } from '@/config';
 // import { Budget } from '@/components/dashboard/overview/budget';
 // import dayjs from 'dayjs';
@@ -44,10 +44,10 @@ function parseParams({ id, year, age }: PopulationPageProps["params"]): {
     };
 }
 export async function generateMetadata({ params }: PopulationPageProps): Promise<Metadata> {
-    const { year, prefecture, city } = parseParams(params);
+    const { year, prefecture, city, age } = parseParams(params);
     return {
-        title: `${year}年${prefecture}${city}の人口動態を監視・分析 | ${config.site.name}`,
-        description: `${year}年${prefecture}${city}の人口動態データを確認。年齢構成や男女比、更新日などの統計情報を簡単にチェックできます。${config.site.name}。`,
+        title: `${year}年 ${prefecture}${city} ${age.replace("-", "～")}歳の人口動態を監視・分析 | ${config.site.name}`,
+        description: `${year}年 ${prefecture}${city} ${age.replace("-", "～")}歳の人口動態データを確認。年齢構成や男女比、更新日などの統計情報を簡単にチェックできます。${config.site.name}。`,
         // openGraph: {
         //     title: post.title,
         //     description: post.summary,
@@ -65,8 +65,11 @@ export default function Page({ params }: PopulationPageProps): React.JSX.Element
         <Grid container spacing={3}>
             <Breadcrumbs aria-label="breadcrumb">
                 <Link underline="hover" color="inherit" href="/dashboard">人口動態</Link>
-                {city ? <Link underline="hover" color="inherit" href={`/dashboard/population/${year}/${prefecture}`}>{prefecture}</Link> : <Typography sx={{ color: 'text.primary' }}>{prefecture}</Typography>}
-                {city ? <Typography sx={{ color: 'text.primary' }}>{city}</Typography> : ""}
+                {city ? <Link underline="hover" color="inherit" href={`/dashboard/population/${year}/${prefecture}`}>{prefecture}</Link> :
+                    age ? <Link underline="hover" color="inherit" href={`/dashboard/population/${year}/${prefecture}`}>{prefecture}</Link> :
+                        <Typography sx={{ color: 'text.primary' }}>{prefecture}</Typography>}
+                {city ? <Link underline="hover" color="inherit" href={`/dashboard/population/${year}/${prefecture}+${city}`}>{city}</Link> : ""}
+                <Typography sx={{ color: 'text.primary' }}>{age.replace("-", "～")}歳</Typography>
             </Breadcrumbs>
             <Detail year={year} prefecture={prefecture} city={city} age={age} />
             {/* <Grid lg={3} sm={6} xs={12}>

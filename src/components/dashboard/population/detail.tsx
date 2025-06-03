@@ -163,7 +163,7 @@ export function Detail({ year, prefecture, city, age }: DetailProps): React.JSX.
     const [barGraphCity, setBarGraphCity] = useState<Record<string, Record<string, number>>>({});
     async function fetchData(): Promise<void> {
         const downloadResult = await downloadData({
-            path: `public-data/${prefecture}.jsonl`,
+            path: `public-data/population/${prefecture}.jsonl`,
             options: {
                 bucket: "SKM01"
             }

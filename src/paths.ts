@@ -8,6 +8,7 @@ export const paths = {
     dashboard: {
         population: '/dashboard',
         privacy: '/dashboard/privacy',
+        "prefectural-assembly": '/dashboard/prefectural-assembly',
         account: '/dashboard/account',
         customers: '/dashboard/customers',
         integrations: '/dashboard/integrations',

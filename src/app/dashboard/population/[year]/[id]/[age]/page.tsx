@@ -26,7 +26,7 @@ interface PopulationPageProps {
         age: string;
     };
 }
-// PopulationPageProps['params']
+
 function parseParams({ id, year, age }: PopulationPageProps["params"]): {
     year: string;
     prefecture: string;

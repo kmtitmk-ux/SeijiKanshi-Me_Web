@@ -1,9 +1,9 @@
 import React from 'react';
 import type { Metadata } from 'next';
-import { Detail } from '@/components/dashboard/population/detail';
+import { List } from '@/components/dashboard/prefectural-assembly/prefecture/list';
 import { config } from '@/config';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Typography, Breadcrumbs, Link } from '@mui/material';
+import { Typography, Breadcrumbs, Link, Stack } from '@mui/material';
 // import { config } from '@/config';
 // import { Budget } from '@/components/dashboard/overview/budget';
 // import dayjs from 'dayjs';
@@ -19,31 +19,26 @@ import { Typography, Breadcrumbs, Link } from '@mui/material';
 // import CardActions from '@mui/material/CardActions';
 // import { ArrowClockwise as ArrowClockwiseIcon } from '@phosphor-icons/react/dist/ssr/ArrowClockwise';
 // import { ArrowRight as ArrowRightIcon } from '@phosphor-icons/react/dist/ssr/ArrowRight';
-interface PopulationPageProps {
+interface PrefecturalAssemblyPageProps {
     params: {
-        id: string;
+        prefecture: string;
         year: string;
-        age: string;
     };
 }
-// PopulationPageProps['params']
-function parseParams({ id, year, age }: PopulationPageProps["params"]): {
+function parseParams({ prefecture, year }: PrefecturalAssemblyPageProps["params"]): {
     year: string;
     prefecture: string;
     city: string;
-    age: string;
 } {
-    const checkId = decodeURIComponent(id).split('+');
-    const prefecture = checkId[0];
-    const city = checkId.length === 1 ? "" : checkId[1];
+    // const prefecture = checkId[0];
+    const city = "";// checkId.length === 1 ? "" : checkId[1];
     return {
         year: year ?? "",
-        prefecture: prefecture ?? "",
+        prefecture: decodeURIComponent(prefecture) ?? "",
         city: city ?? "",
-        age: age ?? ""
     };
 }
-export async function generateMetadata({ params }: PopulationPageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: PrefecturalAssemblyPageProps): Promise<Metadata> {
     const { year, prefecture, city } = parseParams(params);
     return {
         title: `${year}年${prefecture}${city}の人口動態を監視・分析 | ${config.site.name}`,
@@ -59,28 +54,30 @@ export async function generateMetadata({ params }: PopulationPageProps): Promise
     };
 }
 
-export default function Page({ params }: PopulationPageProps): React.JSX.Element {
-    const { year, prefecture, city, age } = parseParams(params);
+export default function Page({ params }: PrefecturalAssemblyPageProps): React.JSX.Element {
+    const { year, prefecture, city } = parseParams(params);
     return (
-        <Grid container spacing={3}>
-            <Breadcrumbs aria-label="breadcrumb">
-                <Link underline="hover" color="inherit" href="/dashboard">人口動態</Link>
-                {city ? <Link underline="hover" color="inherit" href={`/dashboard/population/${year}/${prefecture}`}>{prefecture}</Link> : <Typography sx={{ color: 'text.primary' }}>{prefecture}</Typography>}
-                {city ? <Typography sx={{ color: 'text.primary' }}>{city}</Typography> : ""}
-            </Breadcrumbs>
-            <Detail year={year} prefecture={prefecture} city={city} age={age} />
-            {/* <Grid lg={3} sm={6} xs={12}>
-                <Budget diff={12} trend="up" sx={{ height: '100%' }} value="$24k" />
-            </Grid>
-            <Grid lg={3} sm={6} xs={12}>
-                <TotalCustomers diff={16} trend="down" sx={{ height: '100%' }} value="1.6k" />
-            </Grid>
-            <Grid lg={3} sm={6} xs={12}>
-                <TasksProgress sx={{ height: '100%' }} value={75.5} />
-            </Grid>
-            <Grid lg={3} sm={6} xs={12}>
-                <TotalProfit sx={{ height: '100%' }} value="$15k" />
-            </Grid> */}
-        </Grid>
+        <Stack spacing={3}>
+            <Stack direction="row" spacing={3}>
+                <Stack spacing={1} sx={{ flex: '1 1 auto' }}>
+                    <Typography variant="h4">都道府県議会の監視</Typography>
+                    <Typography variant="subtitle2" gutterBottom>全国47都道府県の最新人口動態データを一覧で確認。年齢構成や男女比、更新日などの統計情報を簡単にチェックできます。</Typography>
+                    {/* <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                        <Button color="inherit" startIcon={<UploadIcon fontSize="var(--icon-fontSize-md)" />}>
+                            Import
+                        </Button>
+                        <Button color="inherit" startIcon={<DownloadIcon fontSize="var(--icon-fontSize-md)" />}>
+                            Export
+                        </Button>
+                    </Stack> */}
+                </Stack>
+                {/* <div>
+                    <Button startIcon={<PlusIcon fontSize="var(--icon-fontSize-md)" />} variant="contained">
+                        Add
+                    </Button>
+                </div> */}
+            </Stack>
+            <List prefecture={prefecture} />
+        </Stack>
     );
-}
+};

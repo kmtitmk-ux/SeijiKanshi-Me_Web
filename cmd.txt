@@ -1,0 +1,1 @@
+aws s3 mv s3://amplify-d1p4iculuq82n1-develop-skm01bucket23cf157b-ftnlfueo0gr7/public-data/

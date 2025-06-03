@@ -1,37 +1,34 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { CustomersFilters } from '@/components/dashboard/population/customers-filters';
-import { CustomersTable } from '@/components/dashboard/population/customers-table';
-import type { Customer } from '@/components/dashboard/population/customers-table';
-import dayjs from 'dayjs';
 import { list } from 'aws-amplify/storage';
+import { Filters } from '@/components/dashboard/prefectural-assembly/filters';
+import { PrefecturalAssemblyTable } from '@/components/dashboard/prefectural-assembly/table';
+import type { Customer } from '@/components/dashboard/prefectural-assembly/table';
+import dayjs from 'dayjs';
 
 interface ItemsProps {
     data: Customer[];
-    paginatedCustomers: {
-        id: string;
-        updatedAt: string;
-    }[];
+    paginatedCustomers: Customer[];
 }
 export function List(): React.JSX.Element {
     const page = 0;
     const rowsPerPage = 100;
-    const [originalItems, setOriginalItems] = useState<ItemsProps["paginatedCustomers"]>([]);
-    const [items, setItems] = useState<ItemsProps["paginatedCustomers"]>([]);
+    const [originalItems, setOriginalItems] = useState<ItemsProps["data"]>([]);
+    const [items, setItems] = useState<ItemsProps["data"]>([]);
     const [searchWord, setSearchWord] = useState<string>("");
 
     async function fetchData(): Promise<void> {
         try {
             const result = await list({
-                path: 'public-data/population/',
+                path: 'public-data/prefectural-assembly/',
                 options: { listAll: true, },
             });
-            const newList: ItemsProps["paginatedCustomers"] = [];
+            const newList: ItemsProps["data"] = [];
             for (const item of result.items) {
                 if (item.path.includes("jsonl")) {
                     newList.push({
-                        id: item.path.replace(/public-data\/population\/|.jsonl/g, ""),
+                        id: item.path.replace(/public-data\/prefectural-assembly\/|.jsonl/g, ""),
                         updatedAt: dayjs(item.lastModified).format("YYYY/MM/DD")
                     });
                 }
@@ -44,6 +41,20 @@ export function List(): React.JSX.Element {
     }
 
     useEffect(() => {
+        // async function load(): Promise<void> {
+        //     try {
+        //         const res = await fetch('/assets/東京都議会.jsonl');
+        //         const text = await res.text();
+        //         const newList = text
+        //             .split(/\r?\n/)
+        //             .filter(Boolean)
+        //             .map((line: string) => JSON.parse(line) as Customer);
+        //         setOriginalItems(newList);
+        //         setItems(newList);
+        //     } catch (err) {
+        //         console.error(err);
+        //     }
+        // };
         void fetchData();
     }, []);
 
@@ -81,9 +92,9 @@ export function List(): React.JSX.Element {
     return (
         <>
             <form onSubmit={handleSubmit}>
-                <CustomersFilters />
+                <Filters />
             </form>
-            <CustomersTable
+            <PrefecturalAssemblyTable
                 count={items.length}
                 page={page}
                 rows={items}

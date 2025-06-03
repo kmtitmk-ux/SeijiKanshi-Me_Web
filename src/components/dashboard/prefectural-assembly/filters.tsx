@@ -1,0 +1,32 @@
+import * as React from 'react';
+import Card from '@mui/material/Card';
+import InputAdornment from '@mui/material/InputAdornment';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import { MagnifyingGlass as MagnifyingGlassIcon } from '@phosphor-icons/react/dist/ssr/MagnifyingGlass';
+
+export interface DetailProps {
+    date?: string;
+    round?: string;
+    title?: string;
+    link?: string;
+    cat?: string;
+    id?: string;
+}
+export function Filters(): React.JSX.Element {
+    return (
+        <Card sx={{ p: 2 }}>
+            <OutlinedInput
+                defaultValue=""
+                fullWidth
+                placeholder="検索"
+                startAdornment={
+                    <InputAdornment position="start">
+                        <MagnifyingGlassIcon fontSize="var(--icon-fontSize-md)" />
+                    </InputAdornment>
+                }
+                sx={{ maxWidth: '500px' }}
+                name="search"
+            />
+        </Card>
+    );
+}
