@@ -3,7 +3,7 @@ import {
     InvokeModelCommand
 } from "@aws-sdk/client-bedrock-runtime";
 
-export const myFirstFunction = async () => {
+export const handler = async () => {
     const client = new BedrockRuntimeClient({ region: "us-east-1" });
 
     const input = {
