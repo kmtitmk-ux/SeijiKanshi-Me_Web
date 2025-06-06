@@ -1,0 +1,16 @@
+{
+    "name": "my-first-function",
+    "version": "1.0.0",
+    "main": "handler.js",
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "description": "",
+    "type": "module",
+    "scripts": {
+        "start": "node amplify/my-first-function/handler.js"
+    },
+    "dependencies": {
+        "@aws-sdk/client-bedrock-runtime": "^3.825.0"
+    }
+}
