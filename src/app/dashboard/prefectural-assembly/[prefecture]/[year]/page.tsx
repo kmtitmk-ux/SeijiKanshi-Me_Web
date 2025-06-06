@@ -39,10 +39,10 @@ function parseParams({ prefecture, year }: PrefecturalAssemblyPageProps["params"
     };
 }
 export async function generateMetadata({ params }: PrefecturalAssemblyPageProps): Promise<Metadata> {
-    const { year, prefecture, city } = parseParams(params);
+    const { prefecture } = parseParams(params);
     return {
-        title: `${year}年${prefecture}${city}の人口動態を監視・分析 | ${config.site.name}`,
-        description: `${year}年${prefecture}${city}の人口動態データを確認。年齢構成や男女比、更新日などの統計情報を簡単にチェックできます。${config.site.name}。`,
+        title: `${prefecture} 議案データ可視化 | ${config.site.name}`,
+        description: `${prefecture}の全議案をカテゴリ別に分類し、件数をグラフで比較。各議案の名称と公式リンクも一覧で確認できます。分野ごとの議会活動の傾向が一目でわかるページです。${config.site.name}。`,
         // openGraph: {
         //     title: post.title,
         //     description: post.summary,
@@ -60,8 +60,8 @@ export default function Page({ params }: PrefecturalAssemblyPageProps): React.JS
         <Stack spacing={3}>
             <Stack direction="row" spacing={3}>
                 <Stack spacing={1} sx={{ flex: '1 1 auto' }}>
-                    <Typography variant="h4">都道府県議会の監視</Typography>
-                    <Typography variant="subtitle2" gutterBottom>全国47都道府県の最新人口動態データを一覧で確認。年齢構成や男女比、更新日などの統計情報を簡単にチェックできます。</Typography>
+                    <Typography variant="h4">{prefecture}の監視（{year}年の議案一覧）</Typography>
+                    <Typography variant="subtitle2" gutterBottom>{prefecture}の{year}年に提出された議案をカテゴリ別に分類し、件数をグラフで比較。各議案の名称と公式リンクも一覧で確認できます。分野ごとの議会活動の傾向が一目でわかるページです。</Typography>
                     {/* <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
                         <Button color="inherit" startIcon={<UploadIcon fontSize="var(--icon-fontSize-md)" />}>
                             Import
@@ -78,6 +78,6 @@ export default function Page({ params }: PrefecturalAssemblyPageProps): React.JS
                 </div> */}
             </Stack>
             <List year={year} prefecture={prefecture} city={city} />
-        </Stack>
+        </Stack >
     );
 };

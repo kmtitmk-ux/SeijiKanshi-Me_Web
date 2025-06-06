@@ -39,10 +39,10 @@ function parseParams({ prefecture, year }: PrefecturalAssemblyPageProps["params"
     };
 }
 export async function generateMetadata({ params }: PrefecturalAssemblyPageProps): Promise<Metadata> {
-    const { year, prefecture, city } = parseParams(params);
+    const { prefecture } = parseParams(params);
     return {
-        title: `${year}年${prefecture}${city}の人口動態を監視・分析 | ${config.site.name}`,
-        description: `${year}年${prefecture}${city}の人口動態データを確認。年齢構成や男女比、更新日などの統計情報を簡単にチェックできます。${config.site.name}。`,
+        title: `${prefecture}の議案数を年代別に見る | ${config.site.name}`,
+        description: `各年代ごとの${prefecture}における議案数を比較・確認できるページです。時代ごとの政策課題や社会情勢の変化を、議案の数から読み解きます。`,
         // openGraph: {
         //     title: post.title,
         //     description: post.summary,
@@ -60,8 +60,8 @@ export default function Page({ params }: PrefecturalAssemblyPageProps): React.JS
         <Stack spacing={3}>
             <Stack direction="row" spacing={3}>
                 <Stack spacing={1} sx={{ flex: '1 1 auto' }}>
-                    <Typography variant="h4">都道府県議会の監視</Typography>
-                    <Typography variant="subtitle2" gutterBottom>全国47都道府県の最新人口動態データを一覧で確認。年齢構成や男女比、更新日などの統計情報を簡単にチェックできます。</Typography>
+                    <Typography variant="h4">{prefecture}の監視</Typography>
+                    <Typography variant="subtitle2" gutterBottom>各年代ごとの{prefecture}における議案数を比較・確認できるページです。時代ごとの政策課題や社会情勢の変化を、議案の数から読み解きます。</Typography>
                     {/* <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
                         <Button color="inherit" startIcon={<UploadIcon fontSize="var(--icon-fontSize-md)" />}>
                             Import

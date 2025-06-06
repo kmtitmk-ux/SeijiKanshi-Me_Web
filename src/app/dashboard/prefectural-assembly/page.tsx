@@ -9,8 +9,8 @@ import { List } from '@/components/dashboard/prefectural-assembly/list';
 import { config } from '@/config';
 
 export const metadata = {
-    title: `人口動態を都道府県別に監視・分析｜${config.site.name}`,
-    description: `全国47都道府県の人口動態データを一覧で確認。年齢構成や男女比、更新日などの統計情報を簡単にチェックできます。${config.site.name}。`,
+    title: `都道府県別議会リスト｜${config.site.name}`,
+    description: `全国47都道府県の地方議会を一覧で掲載。各議会の基本情報、議員構成、議案の動向、会議録リンクなどを分かりやすくまとめています。地域政治の見える化にご活用ください。${config.site.name}。`,
 } satisfies Metadata;
 
 export default function Page(): React.JSX.Element {
@@ -19,7 +19,7 @@ export default function Page(): React.JSX.Element {
             <Stack direction="row" spacing={3}>
                 <Stack spacing={1} sx={{ flex: '1 1 auto' }}>
                     <Typography variant="h4">都道府県議会の監視</Typography>
-                    <Typography variant="subtitle2" gutterBottom>全国47都道府県の最新人口動態データを一覧で確認。年齢構成や男女比、更新日などの統計情報を簡単にチェックできます。</Typography>
+                    <Typography variant="subtitle2" gutterBottom>全国47都道府県の地方議会を一覧で掲載。各議会の基本情報、議員構成、議案の動向、会議録リンクなどを分かりやすくまとめています。地域政治の見える化にご活用ください。</Typography>
                     {/* <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
                         <Button color="inherit" startIcon={<UploadIcon fontSize="var(--icon-fontSize-md)" />}>
                             Import
