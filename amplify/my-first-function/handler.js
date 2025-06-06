@@ -2,7 +2,7 @@ import { BedrockRuntimeClient, InvokeModelCommand } from "@aws-sdk/client-bedroc
 
 export const handler = async (event) => {
     console.info("event", event);
-    const client = new BedrockRuntimeClient();
+    const client = new BedrockRuntimeClient({ region: "ap-northeast-1" });
 
     const input = {
         modelId: "anthropic.claude-v2",
