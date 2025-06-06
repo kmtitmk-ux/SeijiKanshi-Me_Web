@@ -1,6 +1,7 @@
 import { BedrockRuntimeClient, InvokeModelCommand } from "@aws-sdk/client-bedrock-runtime";
 
-export const handler = async () => {
+export const handler = async (event) => {
+    console.info("event", event);
     const client = new BedrockRuntimeClient();
 
     const input = {
