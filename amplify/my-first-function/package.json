@@ -1,17 +1,14 @@
 {
-    "name": "my-first-function",
-    "version": "1.0.0",
-    "main": "handler.js",
-    "keywords": [],
-    "author": "",
-    "license": "ISC",
-    "type": "module",
-    "scripts": {
-        "start": "node amplify/my-first-function/handler.js"
-    },
-    "dependencies": {
-        "@aws-sdk/client-bedrock-runtime": "^3.825.0",
-        "uuid": "^11.1.0"
-    },
-    "description": ""
+  "name": "my-first-function",
+  "version": "1.0.0",
+  "main": "handler.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@aws-sdk/client-bedrock-runtime": "^3.830.0"
+  }
 }
