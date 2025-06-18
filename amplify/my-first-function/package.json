@@ -1,15 +1,15 @@
 {
-  "name": "my-first-function",
-  "version": "1.0.0",
-  "main": "handler.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC",
-  "description": "",
-  "dependencies": {
-    "@aws-amplify/backend": "^1.16.1",
-    "@aws-sdk/client-bedrock-runtime": "^3.830.0"
-  }
+    "name": "my-first-function",
+    "version": "1.0.0",
+    "main": "handler.ts",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "license": "ISC",
+    "description": "",
+    "dependencies": {
+        "@aws-amplify/backend": "^1.16.1",
+        "@aws-sdk/client-bedrock-runtime": "^3.830.0"
+    }
 }
