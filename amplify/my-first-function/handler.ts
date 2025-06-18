@@ -1,7 +1,6 @@
 import { BedrockRuntimeClient, InvokeModelCommand } from "@aws-sdk/client-bedrock-runtime";
 
-export const handler = async (event) => {
-    console.log(event);
+export const handler = async () => {
     const client = new BedrockRuntimeClient({ region: "us-east-1" }); // 適切なリージョンを指定
 
     const command = new InvokeModelCommand({
@@ -15,9 +14,9 @@ export const handler = async (event) => {
 
     try {
         const response = await client.send(command);
-        cconsole.log("response", response);
+        console.log("response", response);
         const result = JSON.parse(new TextDecoder().decode(response.body));
-        cconsole.log("result", result);
+        console.log("result", result);
         return {
             statusCode: 200,
             body: JSON.stringify(result),

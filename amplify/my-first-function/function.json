@@ -1,0 +1,8 @@
+{
+    "runtime": "nodejs20.x",
+    "handler": "index.handler",
+    "memory": 128,
+    "timeout": 5,
+    "permissions": [],
+    "environment": {}
+}
